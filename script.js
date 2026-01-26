@@ -25,10 +25,10 @@ function addTask() {
         <div class="form-row">
             <div class="form-group">
                 <label>Frequency Type <span class="required">*</span></label>
-                <div class="button-group">
-                    <input type="radio" name="frequencyType[]" id="freqTypeDays${newIndex}" value="Days" required class="frequency-type-radio">
+                <div class="button-group" data-task-group="${newIndex}">
+                    <input type="radio" name="frequencyType[${newIndex}]" id="freqTypeDays${newIndex}" value="Days" required class="frequency-type-radio">
                     <label for="freqTypeDays${newIndex}" class="button-option">Days</label>
-                    <input type="radio" name="frequencyType[]" id="freqTypeHours${newIndex}" value="Hours" required class="frequency-type-radio">
+                    <input type="radio" name="frequencyType[${newIndex}]" id="freqTypeHours${newIndex}" value="Hours" required class="frequency-type-radio">
                     <label for="freqTypeHours${newIndex}" class="button-option">Hours</label>
                 </div>
             </div>
