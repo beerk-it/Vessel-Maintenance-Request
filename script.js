@@ -1,5 +1,5 @@
 // Google Apps Script Web App URL - Replace with your own URL after deploying
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzG5w-JYNTUavBm3NRV1r0Yy-mZSWJYRxQhYzONINdk7Pial9RyajRG5yB8aYwKFPPG/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwXzKM4gnGm5Jsxb5mZ3E4d5fnBzsRP8ssasuQewlVHW_TR46m7Id4-l66GR3kBy0I5/exec';
 
 // Task counter
 let taskCounter = 1;
