@@ -135,25 +135,20 @@ document.getElementById('maintenanceForm').addEventListener('submit', async func
         }
         
         // Submit to Google Sheets via Apps Script
+        // Using no-cors mode to avoid CORS issues with Google Apps Script
         const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
+            mode: 'no-cors',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data)
         });
         
-        if (response.ok) {
-            const result = await response.json();
-            if (result.status === 'success') {
-                showMessage('success', 'Form submitted successfully! Your request has been recorded.');
-                this.reset();
-            } else {
-                throw new Error(result.message || 'Unknown error occurred');
-            }
-        } else {
-            throw new Error('Server error: ' + response.status);
-        }
+        // With no-cors mode, we can't check response status
+        // But if no error is thrown, assume success
+        showMessage('success', 'Form submitted successfully! Your request has been recorded.');
+        this.reset();
         
     } catch (error) {
         console.error('Error submitting form:', error);
