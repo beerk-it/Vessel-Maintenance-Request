@@ -127,11 +127,11 @@ function doPost(e) {
     // Append all rows to the sheet
     if (rowsData.length > 0) {
       const lastRow = sheet.getLastRow();
-      sheet.getRange(lastRow + 1, 1, rowsData.length, 12).setValues(rowsData);
+      sheet.getRange(lastRow + 1, 1, rowsData.length, 13).setValues(rowsData);
     }
     
     // Auto-resize columns
-    sheet.autoResizeColumns(1, 12);
+    sheet.autoResizeColumns(1, 13);
     
     // Return success response
     return ContentService
