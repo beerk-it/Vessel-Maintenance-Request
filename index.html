@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vessel Maintenance Request Form</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-wrapper">
+            <div class="form-header">
+                <h1>Vessel Maintenance Request Form</h1>
+                <p>Please fill out the form below to submit your maintenance request</p>
+            </div>
+
+            <form id="maintenanceForm">
+                <!-- Vessel Selection -->
+                <div class="form-section">
+                    <h2>Vessel Information</h2>
+                    <div class="form-group">
+                        <label for="vessel">Vessel <span class="required">*</span></label>
+                        <select id="vessel" name="vessel" required>
+                            <option value="">Select a vessel</option>
+                            <option value="Vessel 1">Vessel 1</option>
+                            <option value="Vessel 2">Vessel 2</option>
+                            <option value="Vessel 3">Vessel 3</option>
+                            <option value="Vessel 4">Vessel 4</option>
+                            <option value="Vessel 5">Vessel 5</option>
+                            <option value="Vessel 6">Vessel 6</option>
+                            <option value="Vessel 7">Vessel 7</option>
+                            <option value="Vessel 8">Vessel 8</option>
+                            <option value="Vessel 9">Vessel 9</option>
+                            <option value="Vessel 10">Vessel 10</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Engine Part Section -->
+                <div class="form-section">
+                    <h2>Engine Part Information</h2>
+                    
+                    <div class="form-group">
+                        <label for="engineName">Engine Name <span class="required">*</span></label>
+                        <input type="text" id="engineName" name="engineName" required placeholder="Enter engine name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="engineType">Engine Type <span class="required">*</span></label>
+                        <select id="engineType" name="engineType" required>
+                            <option value="">Select engine type</option>
+                            <option value="System">System</option>
+                            <option value="Inspection">Inspection</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="countingBy">Counting By <span class="required">*</span></label>
+                        <select id="countingBy" name="countingBy" required>
+                            <option value="">Select counting method</option>
+                            <option value="Date interval">Date interval</option>
+                            <option value="Meter number">Meter number</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskName">Task Name <span class="required">*</span></label>
+                        <input type="text" id="taskName" name="taskName" required placeholder="Enter task name">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="frequencyType">Frequency Type <span class="required">*</span></label>
+                            <select id="frequencyType" name="frequencyType" required>
+                                <option value="">Select frequency type</option>
+                                <option value="Days">Days</option>
+                                <option value="Hours">Hours</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="frequencyValue">Frequency Value <span class="required">*</span></label>
+                            <input type="number" id="frequencyValue" name="frequencyValue" required placeholder="Enter number" min="0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description <span class="required">*</span></label>
+                        <textarea id="description" name="description" required rows="4" placeholder="Enter description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reason">Reason <span class="required">*</span></label>
+                        <textarea id="reason" name="reason" required rows="4" placeholder="Enter reason for request"></textarea>
+                    </div>
+                </div>
+
+                <!-- Requestor Information -->
+                <div class="form-section">
+                    <h2>Requestor Information</h2>
+                    
+                    <div class="form-group">
+                        <label for="requestBy">Request By <span class="required">*</span></label>
+                        <input type="text" id="requestBy" name="requestBy" required placeholder="Enter your name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <span class="btn-text">Submit Request</span>
+                        <span class="btn-loader" style="display: none;">⏳</span>
+                    </button>
+                    <button type="reset" class="btn-reset">Reset Form</button>
+                </div>
+
+                <!-- Success/Error Messages -->
+                <div id="message" class="message" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
