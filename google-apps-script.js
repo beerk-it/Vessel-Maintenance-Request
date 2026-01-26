@@ -54,24 +54,54 @@ function doPost(e) {
       sheet.setFrozenRows(1);
     }
     
-    // Prepare the row data
-    const rowData = [
-      data.timestamp || new Date().toISOString(),
-      data.vessel || '',
-      data.engineName || '',
-      data.engineType || '',
-      data.countingBy || '',
-      data.taskName || '',
-      data.frequencyType || '',
-      data.frequencyValue || '',
-      data.description || '',
-      data.reason || '',
-      data.requestBy || '',
-      data.email || ''
-    ];
+    // Get common data (same for all tasks)
+    const timestamp = data.timestamp || new Date().toISOString();
+    const vessel = data.vessel || '';
+    const engineName = data.engineName || '';
+    const engineType = data.engineType || '';
+    const countingBy = data.countingBy || '';
+    const description = data.description || '';
+    const reason = data.reason || '';
+    const requestBy = data.requestBy || '';
+    const email = data.email || '';
     
-    // Append the data to the sheet
-    sheet.appendRow(rowData);
+    // Get tasks array
+    const tasks = data.tasks || [];
+    
+    // If no tasks, create one from old format (backward compatibility)
+    if (tasks.length === 0 && data.taskName) {
+      tasks.push({
+        taskName: data.taskName,
+        frequencyType: data.frequencyType,
+        frequencyValue: data.frequencyValue
+      });
+    }
+    
+    // Prepare rows data - one row per task
+    const rowsData = [];
+    for (let i = 0; i < tasks.length; i++) {
+      const task = tasks[i];
+      rowsData.push([
+        timestamp,
+        vessel,
+        engineName,
+        engineType,
+        countingBy,
+        task.taskName || '',
+        task.frequencyType || '',
+        task.frequencyValue || '',
+        description,
+        reason,
+        requestBy,
+        email
+      ]);
+    }
+    
+    // Append all rows to the sheet
+    if (rowsData.length > 0) {
+      const lastRow = sheet.getLastRow();
+      sheet.getRange(lastRow + 1, 1, rowsData.length, 12).setValues(rowsData);
+    }
     
     // Auto-resize columns
     sheet.autoResizeColumns(1, 12);
@@ -80,7 +110,8 @@ function doPost(e) {
     return ContentService
       .createTextOutput(JSON.stringify({
         'status': 'success',
-        'message': 'Data saved successfully'
+        'message': 'Data saved successfully',
+        'tasksSaved': rowsData.length
       }))
       .setMimeType(ContentService.MimeType.JSON);
       

@@ -1,6 +1,82 @@
 // Google Apps Script Web App URL - Replace with your own URL after deploying
 const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
 
+// Task counter
+let taskCounter = 1;
+
+// Add new task row
+function addTask() {
+    const container = document.getElementById('tasksContainer');
+    const taskRows = container.querySelectorAll('.task-row');
+    const newIndex = taskRows.length;
+    
+    const newTaskRow = document.createElement('div');
+    newTaskRow.className = 'task-row';
+    newTaskRow.setAttribute('data-task-index', newIndex);
+    newTaskRow.innerHTML = `
+        <div class="task-row-header">
+            <span class="task-number">Task ${newIndex + 1}</span>
+            <button type="button" class="btn-remove-task" onclick="removeTask(this)">Remove</button>
+        </div>
+        <div class="form-group">
+            <label>Task Name <span class="required">*</span></label>
+            <input type="text" name="taskName[]" required placeholder="Enter task name" class="task-name-input">
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Frequency Type <span class="required">*</span></label>
+                <select name="frequencyType[]" required class="frequency-type-select">
+                    <option value="">Select frequency type</option>
+                    <option value="Days">Days</option>
+                    <option value="Hours">Hours</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Frequency Value <span class="required">*</span></label>
+                <input type="number" name="frequencyValue[]" required placeholder="Enter number" min="0" step="0.01" class="frequency-value-input">
+            </div>
+        </div>
+    `;
+    
+    container.appendChild(newTaskRow);
+    updateTaskNumbers();
+    updateRemoveButtons();
+}
+
+// Remove task row
+function removeTask(button) {
+    const taskRow = button.closest('.task-row');
+    const container = document.getElementById('tasksContainer');
+    const taskRows = container.querySelectorAll('.task-row');
+    
+    if (taskRows.length > 1) {
+        taskRow.remove();
+        updateTaskNumbers();
+        updateRemoveButtons();
+    }
+}
+
+// Update task numbers
+function updateTaskNumbers() {
+    const taskRows = document.querySelectorAll('.task-row');
+    taskRows.forEach((row, index) => {
+        const taskNumber = row.querySelector('.task-number');
+        taskNumber.textContent = `Task ${index + 1}`;
+    });
+}
+
+// Update remove buttons visibility
+function updateRemoveButtons() {
+    const taskRows = document.querySelectorAll('.task-row');
+    const removeButtons = document.querySelectorAll('.btn-remove-task');
+    
+    if (taskRows.length > 1) {
+        removeButtons.forEach(btn => btn.style.display = 'block');
+    } else {
+        removeButtons.forEach(btn => btn.style.display = 'none');
+    }
+}
+
 // Form submission handler
 document.getElementById('maintenanceForm').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -18,14 +94,27 @@ document.getElementById('maintenanceForm').addEventListener('submit', async func
     
     // Get form data
     const formData = new FormData(this);
+    
+    // Collect all tasks
+    const taskNames = formData.getAll('taskName[]');
+    const frequencyTypes = formData.getAll('frequencyType[]');
+    const frequencyValues = formData.getAll('frequencyValue[]');
+    
+    const tasks = [];
+    for (let i = 0; i < taskNames.length; i++) {
+        tasks.push({
+            taskName: taskNames[i],
+            frequencyType: frequencyTypes[i],
+            frequencyValue: frequencyValues[i]
+        });
+    }
+    
     const data = {
         vessel: formData.get('vessel'),
         engineName: formData.get('engineName'),
         engineType: formData.get('engineType'),
         countingBy: formData.get('countingBy'),
-        taskName: formData.get('taskName'),
-        frequencyType: formData.get('frequencyType'),
-        frequencyValue: formData.get('frequencyValue'),
+        tasks: tasks,
         description: formData.get('description'),
         reason: formData.get('reason'),
         requestBy: formData.get('requestBy'),
@@ -110,7 +199,6 @@ function showMessage(type, text) {
 function validateForm() {
     const form = document.getElementById('maintenanceForm');
     const email = form.email.value;
-    const frequencyValue = form.frequencyValue.value;
     
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -119,14 +207,36 @@ function validateForm() {
         return false;
     }
     
-    // Frequency value validation
-    if (frequencyValue <= 0) {
-        showMessage('error', 'Frequency value must be greater than 0');
-        return false;
+    // Validate all tasks
+    const taskRows = document.querySelectorAll('.task-row');
+    for (let row of taskRows) {
+        const taskName = row.querySelector('.task-name-input').value.trim();
+        const frequencyType = row.querySelector('.frequency-type-select').value;
+        const frequencyValue = parseFloat(row.querySelector('.frequency-value-input').value);
+        
+        if (!taskName) {
+            showMessage('error', 'Please fill in all task names');
+            return false;
+        }
+        
+        if (!frequencyType) {
+            showMessage('error', 'Please select frequency type for all tasks');
+            return false;
+        }
+        
+        if (!frequencyValue || frequencyValue <= 0) {
+            showMessage('error', 'Frequency value must be greater than 0 for all tasks');
+            return false;
+        }
     }
     
     return true;
 }
+
+// Initialize remove buttons on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateRemoveButtons();
+});
 
 // Add real-time validation
 document.getElementById('email').addEventListener('blur', function() {

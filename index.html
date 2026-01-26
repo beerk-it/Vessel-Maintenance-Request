@@ -10,7 +10,21 @@
     <div class="container">
         <div class="form-wrapper">
             <div class="form-header">
-                <h1>Vessel Maintenance Request Form</h1>
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M50 10 L30 40 L70 40 Z" fill="#FFD700" stroke="#FFD700" stroke-width="2"/>
+                            <circle cx="50" cy="45" r="8" fill="#FFD700"/>
+                            <path d="M50 53 L45 70 L55 70 Z" fill="#FFD700"/>
+                            <path d="M50 20 L50 50" stroke="#FFD700" stroke-width="3"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1 class="logo-title">MASTER</h1>
+                        <h2 class="logo-subtitle">LIVEABOARDS</h2>
+                    </div>
+                </div>
+                <h3 class="form-title">Vessel Maintenance Request Form</h3>
                 <p>Please fill out the form below to submit your maintenance request</p>
             </div>
 
@@ -22,16 +36,16 @@
                         <label for="vessel">Vessel <span class="required">*</span></label>
                         <select id="vessel" name="vessel" required>
                             <option value="">Select a vessel</option>
-                            <option value="Vessel 1">Vessel 1</option>
-                            <option value="Vessel 2">Vessel 2</option>
-                            <option value="Vessel 3">Vessel 3</option>
-                            <option value="Vessel 4">Vessel 4</option>
-                            <option value="Vessel 5">Vessel 5</option>
-                            <option value="Vessel 6">Vessel 6</option>
-                            <option value="Vessel 7">Vessel 7</option>
-                            <option value="Vessel 8">Vessel 8</option>
-                            <option value="Vessel 9">Vessel 9</option>
-                            <option value="Vessel 10">Vessel 10</option>
+                            <option value="Blue Horizon">Blue Horizon</option>
+                            <option value="Blue Melody">Blue Melody</option>
+                            <option value="Galapagos Master">Galapagos Master</option>
+                            <option value="Indo Master">Indo Master</option>
+                            <option value="Maldives Master">Maldives Master</option>
+                            <option value="Pacific Master">Pacific Master</option>
+                            <option value="Palau Siren">Palau Siren</option>
+                            <option value="Philippine Siren">Philippine Siren</option>
+                            <option value="Solomons Master">Solomons Master</option>
+                            <option value="Thailand Master">Thailand Master</option>
                         </select>
                     </div>
                 </div>
@@ -64,24 +78,36 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="taskName">Task Name <span class="required">*</span></label>
-                        <input type="text" id="taskName" name="taskName" required placeholder="Enter task name">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="frequencyType">Frequency Type <span class="required">*</span></label>
-                            <select id="frequencyType" name="frequencyType" required>
-                                <option value="">Select frequency type</option>
-                                <option value="Days">Days</option>
-                                <option value="Hours">Hours</option>
-                            </select>
+                        <label>Tasks <span class="required">*</span></label>
+                        <div id="tasksContainer">
+                            <div class="task-row" data-task-index="0">
+                                <div class="task-row-header">
+                                    <span class="task-number">Task 1</span>
+                                    <button type="button" class="btn-remove-task" onclick="removeTask(this)" style="display: none;">Remove</button>
+                                </div>
+                                <div class="form-group">
+                                    <label>Task Name <span class="required">*</span></label>
+                                    <input type="text" name="taskName[]" required placeholder="Enter task name" class="task-name-input">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Frequency Type <span class="required">*</span></label>
+                                        <select name="frequencyType[]" required class="frequency-type-select">
+                                            <option value="">Select frequency type</option>
+                                            <option value="Days">Days</option>
+                                            <option value="Hours">Hours</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Frequency Value <span class="required">*</span></label>
+                                        <input type="number" name="frequencyValue[]" required placeholder="Enter number" min="0" step="0.01" class="frequency-value-input">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="frequencyValue">Frequency Value <span class="required">*</span></label>
-                            <input type="number" id="frequencyValue" name="frequencyValue" required placeholder="Enter number" min="0" step="0.01">
-                        </div>
+                        <button type="button" class="btn-add-task" onclick="addTask()">
+                            <span>+</span> Add Another Task
+                        </button>
                     </div>
 
                     <div class="form-group">
