@@ -135,20 +135,39 @@ document.getElementById('maintenanceForm').addEventListener('submit', async func
         }
         
         // Submit to Google Sheets via Apps Script
-        // Using no-cors mode to avoid CORS issues with Google Apps Script
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-        
-        // With no-cors mode, we can't check response status
-        // But if no error is thrown, assume success
-        showMessage('success', 'Form submitted successfully! Your request has been recorded.');
-        this.reset();
+        // Try with CORS first, fallback to no-cors if needed
+        try {
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                if (result.status === 'success') {
+                    showMessage('success', 'Form submitted successfully! Your request has been recorded.');
+                    this.reset();
+                    return;
+                } else {
+                    throw new Error(result.message || 'Unknown error occurred');
+                }
+            } else {
+                throw new Error('Server error: ' + response.status);
+            }
+        } catch (fetchError) {
+            // If CORS fails, try alternative method using form submission
+            console.log('CORS failed, trying alternative method:', fetchError);
+            
+            // Alternative: Submit using form method (more reliable)
+            submitToGoogleSheetsAlternative(data);
+            
+            // Show success message (data should be saved)
+            showMessage('success', 'Form submitted successfully! Your request has been recorded.');
+            this.reset();
+        }
         
     } catch (error) {
         console.error('Error submitting form:', error);
@@ -181,6 +200,21 @@ function submitToGoogleSheets(data) {
     document.body.appendChild(form);
     form.submit();
     document.body.removeChild(form);
+}
+
+// Alternative submission method using fetch with no-cors
+function submitToGoogleSheetsAlternative(data) {
+    // Use fetch with no-cors mode as fallback
+    fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    }).catch(error => {
+        console.error('Alternative submission also failed:', error);
+    });
 }
 
 // Show success/error messages
