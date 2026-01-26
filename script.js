@@ -102,14 +102,15 @@ document.getElementById('maintenanceForm').addEventListener('submit', async func
     
     // Collect all tasks
     const taskNames = formData.getAll('taskName[]');
-    const frequencyTypes = formData.getAll('frequencyType[]');
     const frequencyValues = formData.getAll('frequencyValue[]');
     
+    // Get frequency types from radio buttons (each task has its own radio group)
     const tasks = [];
     for (let i = 0; i < taskNames.length; i++) {
+        const frequencyType = formData.get(`frequencyType[${i}]`);
         tasks.push({
             taskName: taskNames[i],
-            frequencyType: frequencyTypes[i],
+            frequencyType: frequencyType || '',
             frequencyValue: frequencyValues[i]
         });
     }
