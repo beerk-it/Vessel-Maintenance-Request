@@ -25,11 +25,12 @@ function addTask() {
         <div class="form-row">
             <div class="form-group">
                 <label>Frequency Type <span class="required">*</span></label>
-                <select name="frequencyType[]" required class="frequency-type-select">
-                    <option value="">Select frequency type</option>
-                    <option value="Days">Days</option>
-                    <option value="Hours">Hours</option>
-                </select>
+                <div class="button-group">
+                    <input type="radio" name="frequencyType[]" id="freqTypeDays${newIndex}" value="Days" required class="frequency-type-radio">
+                    <label for="freqTypeDays${newIndex}" class="button-option">Days</label>
+                    <input type="radio" name="frequencyType[]" id="freqTypeHours${newIndex}" value="Hours" required class="frequency-type-radio">
+                    <label for="freqTypeHours${newIndex}" class="button-option">Hours</label>
+                </div>
             </div>
             <div class="form-group">
                 <label>Frequency Value <span class="required">*</span></label>
@@ -95,6 +96,10 @@ document.getElementById('maintenanceForm').addEventListener('submit', async func
     // Get form data
     const formData = new FormData(this);
     
+    // Get radio button values
+    const engineType = formData.get('engineType');
+    const countingBy = formData.get('countingBy');
+    
     // Collect all tasks
     const taskNames = formData.getAll('taskName[]');
     const frequencyTypes = formData.getAll('frequencyType[]');
@@ -112,8 +117,8 @@ document.getElementById('maintenanceForm').addEventListener('submit', async func
     const data = {
         vessel: formData.get('vessel'),
         engineName: formData.get('engineName'),
-        engineType: formData.get('engineType'),
-        countingBy: formData.get('countingBy'),
+        engineType: engineType,
+        countingBy: countingBy,
         tasks: tasks,
         description: formData.get('description'),
         reason: formData.get('reason'),

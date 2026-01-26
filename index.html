@@ -19,7 +19,7 @@
             <form id="maintenanceForm">
                 <!-- Vessel Selection -->
                 <div class="form-section">
-                    <h2>Vessel Information</h2>
+                    <h2>🚢 Vessel Information</h2>
                     <div class="form-group">
                         <label for="vessel">Vessel <span class="required">*</span></label>
                         <select id="vessel" name="vessel" required>
@@ -40,33 +40,41 @@
 
                 <!-- Engine Part Section -->
                 <div class="form-section">
-                    <h2>Engine Part Information</h2>
+                    <h2>⚙️ Engine Part Information</h2>
                     
                     <div class="form-group">
                         <label for="engineName">Engine Name <span class="required">*</span></label>
-                        <input type="text" id="engineName" name="engineName" required placeholder="Enter engine name">
+                        <input type="text" id="engineName" name="engineName" required placeholder="e.g. Main Engine No.1, Generator Set A">
                     </div>
 
                     <div class="form-group">
-                        <label for="engineType">Engine Type <span class="required">*</span></label>
-                        <select id="engineType" name="engineType" required>
-                            <option value="">Select engine type</option>
-                            <option value="System">System</option>
-                            <option value="Inspection">Inspection</option>
-                        </select>
+                        <label>Engine Type <span class="required">*</span></label>
+                        <div class="button-group">
+                            <input type="radio" id="engineTypeSystem" name="engineType" value="System" required>
+                            <label for="engineTypeSystem" class="button-option">System</label>
+                            <input type="radio" id="engineTypeInspection" name="engineType" value="Inspection" required>
+                            <label for="engineTypeInspection" class="button-option">Inspection</label>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="countingBy">Counting By <span class="required">*</span></label>
-                        <select id="countingBy" name="countingBy" required>
-                            <option value="">Select counting method</option>
-                            <option value="Date interval">Date interval</option>
-                            <option value="Meter number">Meter number</option>
-                        </select>
+                        <label>Counting By <span class="required">*</span></label>
+                        <div class="button-group">
+                            <input type="radio" id="countingByDate" name="countingBy" value="Date interval" required>
+                            <label for="countingByDate" class="button-option">
+                                <span class="button-icon">📅</span>
+                                Date
+                            </label>
+                            <input type="radio" id="countingByMeter" name="countingBy" value="Meter number" required>
+                            <label for="countingByMeter" class="button-option">
+                                <span class="button-icon">🔢</span>
+                                Meter
+                            </label>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Tasks <span class="required">*</span></label>
+                        <label>📋 Tasks <span class="required">*</span></label>
                         <div id="tasksContainer">
                             <div class="task-row" data-task-index="0">
                                 <div class="task-row-header">
@@ -80,11 +88,12 @@
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label>Frequency Type <span class="required">*</span></label>
-                                        <select name="frequencyType[]" required class="frequency-type-select">
-                                            <option value="">Select frequency type</option>
-                                            <option value="Days">Days</option>
-                                            <option value="Hours">Hours</option>
-                                        </select>
+                                        <div class="button-group">
+                                            <input type="radio" name="frequencyType[]" id="freqTypeDays0" value="Days" required class="frequency-type-radio">
+                                            <label for="freqTypeDays0" class="button-option">Days</label>
+                                            <input type="radio" name="frequencyType[]" id="freqTypeHours0" value="Hours" required class="frequency-type-radio">
+                                            <label for="freqTypeHours0" class="button-option">Hours</label>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label>Frequency Value <span class="required">*</span></label>
@@ -99,27 +108,27 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="description">Description <span class="required">*</span></label>
+                        <label for="description">📝 Description <span class="required">*</span></label>
                         <textarea id="description" name="description" required rows="4" placeholder="Enter description"></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label for="reason">Reason <span class="required">*</span></label>
+                        <label for="reason">💭 Reason <span class="required">*</span></label>
                         <textarea id="reason" name="reason" required rows="4" placeholder="Enter reason for request"></textarea>
                     </div>
                 </div>
 
                 <!-- Requestor Information -->
                 <div class="form-section">
-                    <h2>Requestor Information</h2>
+                    <h2>👤 Requestor Information</h2>
                     
                     <div class="form-group">
-                        <label for="requestBy">Request By <span class="required">*</span></label>
+                        <label for="requestBy">✍️ Request By <span class="required">*</span></label>
                         <input type="text" id="requestBy" name="requestBy" required placeholder="Enter your name">
                     </div>
 
                     <div class="form-group">
-                        <label for="email">Email <span class="required">*</span></label>
+                        <label for="email">📧 Email <span class="required">*</span></label>
                         <input type="email" id="email" name="email" required placeholder="Enter your email address">
                     </div>
                 </div>
