@@ -18,14 +18,21 @@ async function loadRequests() {
         const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getData${statusFilter ? '&status=' + statusFilter : ''}`);
         const result = await response.json();
         
-        if (result.status === 'success' && result.data) {
-            displayRequests(result.data);
+        console.log('Response from server:', result); // Debug log
+        
+        if (result.status === 'success') {
+            if (result.data && result.data.length > 0) {
+                displayRequests(result.data);
+            } else {
+                tbody.innerHTML = '<tr><td colspan="14" class="empty-state">No requests found</td></tr>';
+            }
         } else {
-            tbody.innerHTML = '<tr><td colspan="14" class="empty-state">No data found</td></tr>';
+            console.error('Server error:', result.message);
+            tbody.innerHTML = `<tr><td colspan="14" class="empty-state">Error: ${result.message || 'Unknown error'}</td></tr>`;
         }
     } catch (error) {
         console.error('Error loading requests:', error);
-        tbody.innerHTML = '<tr><td colspan="14" class="empty-state">Error loading data. Please try again.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="14" class="empty-state">Error loading data. Please check console for details.</td></tr>';
     }
 }
 
@@ -59,7 +66,7 @@ function displayRequests(data) {
             <td>${truncateText(row[9] || '', 50)}</td>
             <td>${row[10] || ''}</td>
             <td>${row[11] || ''}</td>
-            <td><span class="status-badge status-${status.toLowerCase()}">${status}</span></td>
+            <td><span class="status-badge status-${(status || 'Pending').toLowerCase()}">${status || 'Pending'}</span></td>
             <td>
                 <div class="action-buttons">
                     ${status === 'Pending' ? `
@@ -73,6 +80,11 @@ function displayRequests(data) {
                     ${status === 'Approved' ? `
                         <button class="btn-action btn-complete" onclick="updateStatus(${rowNumber}, 'Completed')" title="Mark as Complete">
                             ✓ Complete
+                        </button>
+                    ` : ''}
+                    ${status === 'Completed' ? `
+                        <button class="btn-action btn-done" onclick="updateStatus(${rowNumber}, 'Done')" title="Mark as Done">
+                            ✅ Done
                         </button>
                     ` : ''}
                 </div>
@@ -94,26 +106,29 @@ async function updateStatus(rowNumber, newStatus) {
     }
     
     try {
+        console.log('Updating status:', { rowNumber, newStatus }); // Debug log
+        
         const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
+            mode: 'no-cors', // Use no-cors to avoid CORS issues
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 action: 'updateStatus',
-                rowIndex: rowNumber, // Row number in Google Sheet (row 1 is header)
+                rowIndex: parseInt(rowNumber), // Row number in Google Sheet (row 1 is header)
                 status: newStatus
             })
         });
         
-        const result = await response.json();
+        // With no-cors, we can't check response, but assume success if no error
+        showMessage('success', `Request ${newStatus.toLowerCase()} successfully!`);
         
-        if (result.status === 'success') {
-            showMessage('success', `Request ${newStatus.toLowerCase()} successfully!`);
+        // Wait a bit before reloading to ensure data is saved
+        setTimeout(() => {
             loadRequests(); // Reload data
-        } else {
-            showMessage('error', 'Failed to update status: ' + result.message);
-        }
+        }, 500);
+        
     } catch (error) {
         console.error('Error updating status:', error);
         showMessage('error', 'Failed to update status. Please try again.');

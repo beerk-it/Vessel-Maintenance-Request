@@ -39,13 +39,37 @@ function doPost(e) {
           .setMimeType(ContentService.MimeType.JSON);
       }
       
+      // Validate row index
+      const rowIndex = parseInt(data.rowIndex);
+      if (isNaN(rowIndex) || rowIndex < 2) {
+        return ContentService
+          .createTextOutput(JSON.stringify({
+            'status': 'error',
+            'message': 'Invalid row index'
+          }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      
+      // Check if row exists
+      const lastRow = sheet.getLastRow();
+      if (rowIndex > lastRow) {
+        return ContentService
+          .createTextOutput(JSON.stringify({
+            'status': 'error',
+            'message': 'Row does not exist'
+          }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      
       // Update status in column 13 (M column)
-      sheet.getRange(data.rowIndex, 13).setValue(data.status);
+      sheet.getRange(rowIndex, 13).setValue(data.status);
       
       return ContentService
         .createTextOutput(JSON.stringify({
           'status': 'success',
-          'message': 'Status updated successfully'
+          'message': 'Status updated successfully',
+          'rowIndex': rowIndex,
+          'newStatus': data.status
         }))
         .setMimeType(ContentService.MimeType.JSON);
     }
@@ -171,14 +195,30 @@ function doGet(e) {
           .setMimeType(ContentService.MimeType.JSON);
       }
       
+      // Check if there's data (more than just header)
+      const lastRow = sheet.getLastRow();
+      if (lastRow <= 1) {
+        // No data, only header
+        return ContentService
+          .createTextOutput(JSON.stringify({
+            'status': 'success',
+            'data': []
+          }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      
       // Get all data (skip header row)
-      const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 13).getValues();
+      const numRows = lastRow - 1;
+      const data = sheet.getRange(2, 1, numRows, 13).getValues();
       
       // Filter by status if provided
       const statusFilter = e.parameter.status;
       let filteredData = data;
       if (statusFilter) {
-        filteredData = data.filter(row => row[12] === statusFilter);
+        filteredData = data.filter(row => {
+          const rowStatus = row[12] || 'Pending';
+          return rowStatus === statusFilter;
+        });
       }
       
       return ContentService
