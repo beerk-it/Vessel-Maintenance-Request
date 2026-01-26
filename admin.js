@@ -43,6 +43,8 @@ function displayRequests(data) {
     data.forEach((row, index) => {
         const tr = document.createElement('tr');
         const status = row[12] || 'Pending'; // Status is in column 13 (index 12)
+        // Row number in sheet = index + 2 (row 1 is header, array is 0-indexed)
+        const rowNumber = index + 2;
         
         tr.innerHTML = `
             <td>${formatDate(row[0])}</td>
@@ -61,15 +63,15 @@ function displayRequests(data) {
             <td>
                 <div class="action-buttons">
                     ${status === 'Pending' ? `
-                        <button class="btn-action btn-approve" onclick="updateStatus(${index}, 'Approved')" title="Approve">
+                        <button class="btn-action btn-approve" onclick="updateStatus(${rowNumber}, 'Approved')" title="Approve">
                             ✅ Approve
                         </button>
-                        <button class="btn-action btn-reject" onclick="updateStatus(${index}, 'Rejected')" title="Reject">
+                        <button class="btn-action btn-reject" onclick="updateStatus(${rowNumber}, 'Rejected')" title="Reject">
                             ❌ Reject
                         </button>
                     ` : ''}
                     ${status === 'Approved' ? `
-                        <button class="btn-action btn-complete" onclick="updateStatus(${index}, 'Completed')" title="Mark as Complete">
+                        <button class="btn-action btn-complete" onclick="updateStatus(${rowNumber}, 'Completed')" title="Mark as Complete">
                             ✓ Complete
                         </button>
                     ` : ''}
@@ -77,8 +79,8 @@ function displayRequests(data) {
             </td>
         `;
         
-        // Store row data for status update
-        tr.dataset.rowIndex = index;
+        // Store row data for reference
+        tr.dataset.rowNumber = rowNumber;
         tr.dataset.rowData = JSON.stringify(row);
         
         tbody.appendChild(tr);
@@ -86,14 +88,10 @@ function displayRequests(data) {
 }
 
 // Update status of a request
-async function updateStatus(rowIndex, newStatus) {
+async function updateStatus(rowNumber, newStatus) {
     if (!confirm(`Are you sure you want to ${newStatus.toLowerCase()} this request?`)) {
         return;
     }
-    
-    const tbody = document.getElementById('requestsTableBody');
-    const row = tbody.children[rowIndex];
-    const rowData = JSON.parse(row.dataset.rowData);
     
     try {
         const response = await fetch(GOOGLE_SCRIPT_URL, {
@@ -103,7 +101,7 @@ async function updateStatus(rowIndex, newStatus) {
             },
             body: JSON.stringify({
                 action: 'updateStatus',
-                rowIndex: rowIndex + 2, // +2 because row 1 is header, and array is 0-indexed
+                rowIndex: rowNumber, // Row number in Google Sheet (row 1 is header)
                 status: newStatus
             })
         });
