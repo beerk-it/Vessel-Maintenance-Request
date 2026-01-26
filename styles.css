@@ -41,7 +41,7 @@ body {
     border-radius: 20px;
     padding: 40px;
     box-shadow: 0 4px 20px var(--shadow);
-    border: 2px solid var(--blue-text);
+    border: 2px solid var(--border-gold);
 }
 
 .form-header {
@@ -56,7 +56,7 @@ body {
     padding: 20px;
     background: var(--white);
     border-radius: 15px;
-    border: 2px solid var(--blue-text);
+    border: 2px solid var(--border-gold);
     max-width: 100%;
     box-sizing: border-box;
 }
@@ -74,7 +74,7 @@ body {
     padding: 25px;
     background: var(--blue-text);
     border-radius: 15px;
-    border: 2px solid var(--blue-text);
+    border: 2px solid var(--border-gold);
 }
 
 .form-section h2 {
@@ -163,7 +163,7 @@ textarea {
     justify-content: center;
     margin-top: 40px;
     padding-top: 30px;
-    border-top: 2px solid var(--blue-text);
+    border-top: 2px solid var(--border-gold);
 }
 
 .btn-submit,
@@ -192,6 +192,7 @@ textarea {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px var(--shadow);
     background: var(--blue-dark);
+    border-color: var(--border-gold);
 }
 
 .btn-submit:active {
@@ -207,11 +208,11 @@ textarea {
 .btn-reset {
     background: transparent;
     color: var(--white);
-    border: 2px solid var(--white);
+    border: 2px solid var(--border-gold);
 }
 
 .btn-reset:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 215, 0, 0.1);
     border-color: var(--border-gold);
     color: var(--white);
 }
@@ -305,8 +306,8 @@ textarea {
 }
 
 .task-row {
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid var(--white);
+    background: rgba(10, 26, 47, 0.3);
+    border: 2px solid var(--border-gold);
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
@@ -316,7 +317,7 @@ textarea {
 .task-row:hover {
     border-color: var(--border-gold);
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(10, 26, 47, 0.4);
 }
 
 .task-row-header {
@@ -357,7 +358,7 @@ textarea {
     width: 100%;
     background: transparent;
     color: var(--white);
-    border: 2px dashed var(--white);
+    border: 2px dashed var(--border-gold);
     padding: 14px 20px;
     border-radius: 8px;
     cursor: pointer;
@@ -371,7 +372,7 @@ textarea {
 }
 
 .btn-add-task:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 215, 0, 0.1);
     border-color: var(--border-gold);
     color: var(--white);
     transform: translateY(-2px);
