@@ -1,5 +1,5 @@
 // Google Apps Script Web App URL - Replace with your own URL after deploying
-const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/a/macros/masterliveaboards.com/s/AKfycbxdNVaiOiwnAS3snUX5ya0qfnl2o-_LAztbP-gHa7hjUy-6eXGFkv33rz6YCN8r6a6J3A/exec';
 
 // Task counter
 let taskCounter = 1;
