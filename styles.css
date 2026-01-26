@@ -54,11 +54,12 @@ body {
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background: var(--white);
+    background: var(--blue-text);
     border-radius: 15px;
     border: 2px solid var(--border-gold);
     max-width: 100%;
     box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
 .logo-image {
@@ -67,6 +68,16 @@ body {
     max-height: 150px;
     object-fit: contain;
     display: block;
+}
+
+.app-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--blue-text);
+    margin: 0;
+    padding: 15px 0;
+    text-align: center;
+    letter-spacing: 1px;
 }
 
 .form-section {
@@ -207,14 +218,14 @@ textarea {
 
 .btn-reset {
     background: transparent;
-    color: var(--white);
+    color: var(--blue-text);
     border: 2px solid var(--border-gold);
 }
 
 .btn-reset:hover {
     background: rgba(255, 215, 0, 0.1);
     border-color: var(--border-gold);
-    color: var(--white);
+    color: var(--blue-text);
 }
 
 .message {
