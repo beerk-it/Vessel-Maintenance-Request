@@ -298,6 +298,14 @@ textarea {
     .task-row {
         padding: 15px;
     }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .button-option {
+        width: 100%;
+    }
 }
 
 /* Loading state */
