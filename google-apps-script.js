@@ -25,6 +25,31 @@ function doPost(e) {
     // Parse the incoming data
     const data = JSON.parse(e.postData.contents);
     
+    // Handle status update
+    if (data.action === 'updateStatus') {
+      const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+      let sheet = ss.getSheetByName(SHEET_NAME);
+      
+      if (!sheet) {
+        return ContentService
+          .createTextOutput(JSON.stringify({
+            'status': 'error',
+            'message': 'Sheet not found'
+          }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      
+      // Update status in column 13 (M column)
+      sheet.getRange(data.rowIndex, 13).setValue(data.status);
+      
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          'status': 'success',
+          'message': 'Status updated successfully'
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
     // Open the spreadsheet
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     let sheet = ss.getSheetByName(SHEET_NAME);
@@ -33,7 +58,7 @@ function doPost(e) {
     if (!sheet) {
       sheet = ss.insertSheet(SHEET_NAME);
       // Add headers
-      sheet.getRange(1, 1, 1, 12).setValues([[
+      sheet.getRange(1, 1, 1, 13).setValues([[
         'Timestamp',
         'Vessel',
         'Engine Name',
@@ -45,7 +70,8 @@ function doPost(e) {
         'Description',
         'Reason',
         'Request By',
-        'Email'
+        'Email',
+        'Status'
       ]]);
       // Format header row
       sheet.getRange(1, 1, 1, 12).setFontWeight('bold');
@@ -93,7 +119,8 @@ function doPost(e) {
         description,
         reason,
         requestBy,
-        email
+        email,
+        'Pending' // Default status
       ]);
     }
     
@@ -127,13 +154,57 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  // Handle GET requests (for testing)
-  return ContentService
-    .createTextOutput(JSON.stringify({
-      'status': 'ok',
-      'message': 'Vessel Maintenance Request Form API is running'
-    }))
-    .setMimeType(ContentService.MimeType.JSON);
+  try {
+    const action = e.parameter.action;
+    
+    if (action === 'getData') {
+      // Get all data from sheet
+      const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+      let sheet = ss.getSheetByName(SHEET_NAME);
+      
+      if (!sheet) {
+        return ContentService
+          .createTextOutput(JSON.stringify({
+            'status': 'error',
+            'message': 'Sheet not found'
+          }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      
+      // Get all data (skip header row)
+      const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 13).getValues();
+      
+      // Filter by status if provided
+      const statusFilter = e.parameter.status;
+      let filteredData = data;
+      if (statusFilter) {
+        filteredData = data.filter(row => row[12] === statusFilter);
+      }
+      
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          'status': 'success',
+          'data': filteredData
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // Default response
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        'status': 'ok',
+        'message': 'Vessel Maintenance Request Form API is running'
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        'status': 'error',
+        'message': error.toString()
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 /**
@@ -151,7 +222,7 @@ function setup() {
   sheet.clear();
   
   // Add headers
-  sheet.getRange(1, 1, 1, 12).setValues([[
+  sheet.getRange(1, 1, 1, 13).setValues([[
     'Timestamp',
     'Vessel',
     'Engine Name',
@@ -163,18 +234,19 @@ function setup() {
     'Description',
     'Reason',
     'Request By',
-    'Email'
+    'Email',
+    'Status'
   ]]);
   
   // Format header row
-  const headerRange = sheet.getRange(1, 1, 1, 12);
+  const headerRange = sheet.getRange(1, 1, 1, 13);
   headerRange.setFontWeight('bold');
   headerRange.setBackground('#0a192f');
   headerRange.setFontColor('#ffffff');
   sheet.setFrozenRows(1);
   
   // Auto-resize columns
-  sheet.autoResizeColumns(1, 12);
+  sheet.autoResizeColumns(1, 13);
   
   Logger.log('Sheet setup completed!');
 }
