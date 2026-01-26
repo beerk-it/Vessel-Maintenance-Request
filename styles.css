@@ -61,7 +61,7 @@ body {
     border: 2px solid var(--border-gold);
     max-width: 100%;
     box-sizing: border-box;
-    margin-bottom: 20px;
+    margin-top: 20px;
     box-shadow: 0 4px 16px var(--shadow), 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
