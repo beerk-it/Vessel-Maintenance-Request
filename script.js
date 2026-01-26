@@ -245,7 +245,7 @@ document.getElementById('email').addEventListener('blur', function() {
         this.style.borderColor = 'var(--error-color)';
         showMessage('error', 'Please enter a valid email address');
     } else {
-        this.style.borderColor = 'var(--border-color)';
+        this.style.borderColor = '#e2e8f0';
     }
 });
 
