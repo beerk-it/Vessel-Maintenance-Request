@@ -11,7 +11,7 @@ async function loadRequests() {
     const tbody = document.getElementById('requestsTableBody');
     const statusFilter = document.getElementById('statusFilter').value;
     
-    tbody.innerHTML = '<tr><td colspan="14" class="loading">Loading data...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="13" class="loading">Loading data...</td></tr>';
     
     try {
         // Get data from Google Apps Script
@@ -24,15 +24,15 @@ async function loadRequests() {
             if (result.data && result.data.length > 0) {
                 displayRequests(result.data);
             } else {
-                tbody.innerHTML = '<tr><td colspan="14" class="empty-state">No requests found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="13" class="empty-state">No requests found</td></tr>';
             }
         } else {
             console.error('Server error:', result.message);
-            tbody.innerHTML = `<tr><td colspan="14" class="empty-state">Error: ${result.message || 'Unknown error'}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="13" class="empty-state">Error: ${result.message || 'Unknown error'}</td></tr>`;
         }
     } catch (error) {
         console.error('Error loading requests:', error);
-        tbody.innerHTML = '<tr><td colspan="14" class="empty-state">Error loading data. Please check console for details.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="13" class="empty-state">Error loading data. Please check console for details.</td></tr>';
     }
 }
 
@@ -41,7 +41,7 @@ function displayRequests(data) {
     const tbody = document.getElementById('requestsTableBody');
     
     if (!data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="14" class="empty-state">No requests found</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="13" class="empty-state">No requests found</td></tr>';
         return;
     }
     
@@ -57,7 +57,6 @@ function displayRequests(data) {
             <td>${formatDate(row[0])}</td>
             <td>${row[1] || ''}</td>
             <td>${row[2] || ''}</td>
-            <td>${row[3] || ''}</td>
             <td>${row[4] || ''}</td>
             <td>${row[5] || ''}</td>
             <td>${row[6] || ''}</td>
